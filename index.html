@@ -210,6 +210,54 @@
     .teacher-card a:hover {
       background: #b71c1c;
     }
+
+    /* New Zoom Setup Section */
+    .zoom-setup-section {
+      background: var(--accent-color);
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .zoom-setup-section h2 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .zoom-setup-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .zoom-setup-step {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    .zoom-setup-step img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 15px;
+    }
+
+    .zoom-setup-step h3 {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .zoom-setup-step p {
+      font-size: 1rem;
+      color: var(--secondary-color);
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
@@ -246,6 +294,31 @@
   </div>
   <main>
     <section class="teacher-grid" id="teacherGrid"></section>
+    <section class="zoom-setup-section">
+      <h2>How to Set Up Zoom for Music Lessons</h2>
+      <div class="zoom-setup-steps">
+        <div class="zoom-setup-step">
+          <img src="https://img.icons8.com/color/96/000000/computer.png" alt="Computer Icon">
+          <h3>Prepare Your Computer</h3>
+          <p>Ensure your computer is fully charged and has a stable internet connection. Set up in a quiet, distraction-free environment.</p>
+        </div>
+        <div class="zoom-setup-step">
+          <img src="https://img.icons8.com/color/96/000000/microphone.png" alt="Microphone Icon">
+          <h3>Check Your Microphone</h3>
+          <p>Use a USB microphone or your device's built-in mic. Test your audio in Zoom to ensure clear sound quality.</p>
+        </div>
+        <div class="zoom-setup-step">
+          <img src="https://img.icons8.com/color/96/000000/webcam.png" alt="Webcam Icon">
+          <h3>Adjust Your Camera</h3>
+          <p>Position your camera so the teacher can see you and your instrument clearly. Make sure you have good lighting.</p>
+        </div>
+        <div class="zoom-setup-step">
+          <img src="https://img.icons8.com/color/96/000000/zoom.png" alt="Zoom Icon">
+          <h3>Optimize Zoom Settings</h3>
+          <p>Enable "Original Sound" in Zoom to improve audio quality for music. Turn off background noise suppression.</p>
+        </div>
+      </div>
+    </section>
   </main>
   <script>
     const instruments = ["Guitar", "Piano", "Violin", "Drums"];
