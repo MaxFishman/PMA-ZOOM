@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Music Lessons</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #d2232a;
+      --secondary-color: #1a1a1a;
+      --background-color: #ffffff;
+      --accent-color: #f4f4f4;
+      --font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--secondary-color);
+      line-height: 1.6;
+    }
+
+    header {
+      position: relative;
+      text-align: center;
+      color: white;
+      background-image: url('https://images.squarespace-cdn.com/content/v1/52502516e4b06da770231d9a/83ead6fc-419a-43ad-99d8-ba21875f2b29/Abby+from+recital.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 100px 15px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .controls-wrapper {
+      position: absolute;
+      top: 70%; /* Adjusted to position the controls higher */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.8); /* Transparent white background */
+      backdrop-filter: blur(10px); /* Adds blur to the background */
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      padding: 10px 20px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      flex: 1;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--accent-color);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-bar input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      background: transparent;
+    }
+
+    .filter-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .filter {
+      flex: 1;
+      max-width: 300px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: var(--accent-color);
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .filter select {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      background: transparent;
+      font-family: var(--font-family);
+    }
+
+    .teacher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .teacher-card {
+      background: var(--accent-color);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+
+    .teacher-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .teacher-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .teacher-card-content {
+      padding: 15px;
+    }
+
+    .teacher-card h3 {
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
+    .teacher-card p {
+      color: var(--secondary-color);
+      font-size: 0.9rem;
+      margin: 5px 0;
+    }
+
+    .teacher-card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      color: white;
+      background: var(--primary-color);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .teacher-card a:hover {
+      background: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Zoom Lessons</h1>
+    <p>Find Your Teacher</p>
+    <div class="controls-wrapper">
+      <div class="controls">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search teachers or instruments..." />
+        </div>
+        <div class="filter instrument-filter">
+          <img src="https://img.icons8.com/ios/50/000000/guitar.png" alt="Instrument Icon">
+          <select id="instrumentSelect">
+            <option value="all">All Instruments</option>
+            <option value="guitar">Guitar</option>
+            <option value="piano">Piano</option>
+            <option value="violin">Violin</option>
+            <option value="drums">Drums</option>
+          </select>
+        </div>
+        <div class="filter school-filter">
+          <img src="https://img.icons8.com/ios/50/000000/school.png" alt="School Icon">
+          <select id="schoolSelect">
+            <option value="all">All Schools</option>
+            <option value="school1">School 1</option>
+            <option value="school2">School 2</option>
+            <option value="school3">School 3</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main>
+    <section class="teacher-grid" id="teacherGrid"></section>
+  </main>
+  <script>
+    const fakeNames = ["John Doe", "Jane Smith", "Emily Davis", "Michael Johnson"];
+    const instruments = ["Guitar", "Piano", "Violin", "Drums"];
+    const teachers = Array.from({ length: 20 }, (_, i) => ({
+      name: fakeNames[i % fakeNames.length],
+      instruments: instruments[Math.floor(Math.random() * instruments.length)],
+      school: `School ${Math.floor(i / 5) + 1}`,
+      photo: `https://via.placeholder.com/300?text=Teacher+${i + 1}`,
+      zoomLink: `https://zoom.us/teacher-${i + 1}`,
+    }));
+
+    let filteredTeachers = [...teachers];
+
+    const teacherGrid = document.getElementById("teacherGrid");
+
+    const renderTeachers = () => {
+      teacherGrid.innerHTML = filteredTeachers
+        .map(
+          (t) => `
+            <div class="teacher-card">
+              <img src="${t.photo}" alt="${t.name}">
+              <div class="teacher-card-content">
+                <h3>${t.name}</h3>
+                <p><strong>Instruments:</strong> ${t.instruments}</p>
+                <p><strong>School:</strong> ${t.school}</p>
+                <a href="${t.zoomLink}" target="_blank">Join Zoom Lesson</a>
+              </div>
+            </div>
+          `
+        )
+        .join("");
+    };
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      const query = e.target.value.toLowerCase();
+      filteredTeachers = teachers.filter(
+        (t) =>
+          t.name.toLowerCase().includes(query) ||
+          t.instruments.toLowerCase().includes(query)
+      );
+      renderTeachers();
+    });
+
+    renderTeachers();
+  </script>
+</body>
+</html>
