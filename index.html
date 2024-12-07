@@ -51,34 +51,32 @@
     }
 
     .controls-wrapper {
-      position: absolute;
-      top: 70%; /* Adjusted to position the controls higher */
-      left: 50%;
-      transform: translateX(-50%);
+      position: relative;
+      margin: -50px auto 40px;
       width: 90%;
       max-width: 800px;
-      background: rgba(255, 255, 255, 0.8); /* Transparent white background */
-      backdrop-filter: blur(10px); /* Adds blur to the background */
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      padding: 20px;
+      z-index: 2;
     }
 
     .controls {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      align-items: center;
       gap: 15px;
     }
 
     .search-bar {
       flex: 1;
-      max-width: 400px;
+      max-width: 100%;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px;
+      padding: 12px;
       background: var(--accent-color);
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -92,22 +90,15 @@
       background: transparent;
     }
 
-    .filter-container {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-
     .filter {
       flex: 1;
-      max-width: 300px;
+      max-width: 100%;
       display: flex;
-      gap: 10px;
       align-items: center;
+      gap: 10px;
+      padding: 12px;
       background: var(--accent-color);
       border: 1px solid #ddd;
-      padding: 10px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
@@ -133,6 +124,39 @@
       padding: 20px;
       max-width: 1200px;
       margin: 0 auto;
+    }
+
+    /* Responsive Design for Mobile */
+    @media (max-width: 768px) {
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-bar,
+      .filter {
+        max-width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .teacher-grid {
+        grid-template-columns: repeat(2, 1fr); /* Two cards per row */
+        gap: 15px;
+        padding: 15px;
+      }
+
+      header h1 {
+        font-size: 2rem;
+      }
+
+      header p {
+        font-size: 1rem;
+      }
+
+      .controls-wrapper {
+        margin: -30px auto 30px;
+        padding: 15px;
+      }
     }
 
     .teacher-card {
@@ -192,78 +216,93 @@
   <header>
     <h1>Zoom Lessons</h1>
     <p>Find Your Teacher</p>
-    <div class="controls-wrapper">
-      <div class="controls">
-        <div class="search-bar">
-          <input type="text" id="searchInput" placeholder="Search teachers or instruments..." />
-        </div>
-        <div class="filter instrument-filter">
-          <img src="https://img.icons8.com/ios/50/000000/guitar.png" alt="Instrument Icon">
-          <select id="instrumentSelect">
-            <option value="all">All Instruments</option>
-            <option value="guitar">Guitar</option>
-            <option value="piano">Piano</option>
-            <option value="violin">Violin</option>
-            <option value="drums">Drums</option>
-          </select>
-        </div>
-        <div class="filter school-filter">
-          <img src="https://img.icons8.com/ios/50/000000/school.png" alt="School Icon">
-          <select id="schoolSelect">
-            <option value="all">All Schools</option>
-            <option value="school1">School 1</option>
-            <option value="school2">School 2</option>
-            <option value="school3">School 3</option>
-          </select>
-        </div>
+  </header>
+  <div class="controls-wrapper">
+    <div class="controls">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search teachers, instruments, or schools..." />
+      </div>
+      <div class="filter">
+        <img src="https://img.icons8.com/ios/50/000000/guitar.png" alt="Instrument Icon">
+        <select id="instrumentSelect">
+          <option value="all">All Instruments</option>
+          <option value="Guitar">Guitar</option>
+          <option value="Piano">Piano</option>
+          <option value="Violin">Violin</option>
+          <option value="Drums">Drums</option>
+        </select>
+      </div>
+      <div class="filter">
+        <img src="https://img.icons8.com/ios/50/000000/school.png" alt="School Icon">
+        <select id="schoolSelect">
+          <option value="all">All Schools</option>
+          <option value="School 1">School 1</option>
+          <option value="School 2">School 2</option>
+          <option value="School 3">School 3</option>
+          <option value="School 4">School 4</option>
+        </select>
       </div>
     </div>
-  </header>
+  </div>
   <main>
     <section class="teacher-grid" id="teacherGrid"></section>
   </main>
   <script>
-    const fakeNames = ["John Doe", "Jane Smith", "Emily Davis", "Michael Johnson"];
     const instruments = ["Guitar", "Piano", "Violin", "Drums"];
+    const schools = ["School 1", "School 2", "School 3", "School 4"];
     const teachers = Array.from({ length: 20 }, (_, i) => ({
-      name: fakeNames[i % fakeNames.length],
-      instruments: instruments[Math.floor(Math.random() * instruments.length)],
-      school: `School ${Math.floor(i / 5) + 1}`,
+      name: `Teacher ${i + 1}`,
+      instruments: instruments[i % instruments.length],
+      school: schools[i % schools.length],
       photo: `https://via.placeholder.com/300?text=Teacher+${i + 1}`,
-      zoomLink: `https://zoom.us/teacher-${i + 1}`,
     }));
 
-    let filteredTeachers = [...teachers];
+    let displayedTeachers = [...teachers];
 
     const teacherGrid = document.getElementById("teacherGrid");
+    const searchInput = document.getElementById("searchInput");
+    const instrumentSelect = document.getElementById("instrumentSelect");
+    const schoolSelect = document.getElementById("schoolSelect");
 
     const renderTeachers = () => {
-      teacherGrid.innerHTML = filteredTeachers
+      teacherGrid.innerHTML = displayedTeachers
         .map(
           (t) => `
-            <div class="teacher-card">
-              <img src="${t.photo}" alt="${t.name}">
-              <div class="teacher-card-content">
-                <h3>${t.name}</h3>
-                <p><strong>Instruments:</strong> ${t.instruments}</p>
-                <p><strong>School:</strong> ${t.school}</p>
-                <a href="${t.zoomLink}" target="_blank">Join Zoom Lesson</a>
-              </div>
+          <div class="teacher-card">
+            <img src="${t.photo}" alt="${t.name}">
+            <div class="teacher-card-content">
+              <h3>${t.name}</h3>
+              <p><strong>Instruments:</strong> ${t.instruments}</p>
+              <p><strong>School:</strong> ${t.school}</p>
+              <a href="#">Join Zoom Lesson</a>
             </div>
-          `
+          </div>
+        `
         )
         .join("");
     };
 
-    document.getElementById("searchInput").addEventListener("input", (e) => {
-      const query = e.target.value.toLowerCase();
-      filteredTeachers = teachers.filter(
-        (t) =>
-          t.name.toLowerCase().includes(query) ||
-          t.instruments.toLowerCase().includes(query)
+    const filterTeachers = () => {
+      const searchQuery = searchInput.value.toLowerCase();
+      const selectedInstrument = instrumentSelect.value;
+      const selectedSchool = schoolSelect.value;
+
+      displayedTeachers = teachers.filter(
+        (teacher) =>
+          (selectedInstrument === "all" ||
+            teacher.instruments === selectedInstrument) &&
+          (selectedSchool === "all" || teacher.school === selectedSchool) &&
+          (teacher.name.toLowerCase().includes(searchQuery) ||
+            teacher.instruments.toLowerCase().includes(searchQuery) ||
+            teacher.school.toLowerCase().includes(searchQuery))
       );
+
       renderTeachers();
-    });
+    };
+
+    searchInput.addEventListener("input", filterTeachers);
+    instrumentSelect.addEventListener("change", filterTeachers);
+    schoolSelect.addEventListener("change", filterTeachers);
 
     renderTeachers();
   </script>
