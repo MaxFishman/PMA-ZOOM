@@ -140,7 +140,7 @@
       }
 
       .teacher-grid {
-        grid-template-columns: repeat(2, 1fr); /* Two cards per row */
+        grid-template-columns: repeat(2, 1fr);
         gap: 15px;
         padding: 15px;
       }
@@ -211,7 +211,7 @@
       background: #b71c1c;
     }
 
-    /* New Zoom Setup Section */
+    /* Zoom Setup Section */
     .zoom-setup-section {
       background: var(--accent-color);
       padding: 50px 20px;
@@ -257,6 +257,42 @@
       font-size: 1rem;
       color: var(--secondary-color);
       line-height: 1.5;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      background: var(--background-color);
+      padding: 50px 20px;
+      text-align: center;
+      border-top: 2px solid var(--primary-color);
+    }
+
+    .contact-section h2 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .contact-info {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .contact-info p {
+      font-size: 1rem;
+      color: var(--secondary-color);
+      margin: 10px 0;
+    }
+
+    .contact-info a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .contact-info a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -317,6 +353,14 @@
           <h3>Optimize Zoom Settings</h3>
           <p>Enable "Original Sound" in Zoom to improve audio quality for music. Turn off background noise suppression.</p>
         </div>
+      </div>
+    </section>
+    <section class="contact-section">
+      <h2>Contact Us</h2>
+      <div class="contact-info">
+        <p><strong>School Name:</strong> Music Academy</p>
+        <p><strong>Phone:</strong> <a href="tel:+1234567890">(123) 456-7890</a></p>
+        <p><strong>Email:</strong> <a href="mailto:info@musicacademy.com">info@musicacademy.com</a></p>
       </div>
     </section>
   </main>
