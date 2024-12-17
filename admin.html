@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Management</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #d2232a;
+        --secondary-color: #1a1a1a;
+        --background-color: #ffffff;
+        --accent-color: #f4f4f4;
+        --font-family: "Montserrat", sans-serif;
+      }
+
+      body {
+        font-family: var(--font-family);
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .admin-panel {
+        background-color: var(--accent-color);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .teacher-form {
+        display: grid;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      input,
+      select {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: var(--font-family);
+      }
+
+      button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: var(--font-family);
+      }
+
+      button:hover {
+        background-color: #b71c1c;
+      }
+
+      .teacher-list {
+        display: grid;
+        gap: 15px;
+      }
+
+      .teacher-item {
+        background-color: white;
+        padding: 15px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .teacher-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .delete-btn {
+        background-color: #dc3545;
+      }
+
+      .delete-btn:hover {
+        background-color: #c82333;
+      }
+
+      .edit-btn {
+        background-color: #28a745;
+      }
+
+      .edit-btn:hover {
+        background-color: #218838;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .tag-input {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      .tag {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .tag button {
+        background: none;
+        border: none;
+        color: white;
+        padding: 0;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-panel">
+      <h2>Teacher Management</h2>
+      <form id="teacherForm" class="teacher-form">
+        <input type="hidden" id="editingId" value="" />
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" required />
+        </div>
+        <div class="form-group">
+          <label for="instruments">Instruments (comma-separated):</label>
+          <div id="instrumentsTags" class="tag-input"></div>
+          <input
+            type="text"
+            id="instrumentsInput"
+            placeholder="Type and press Enter"
+          />
+        </div>
+        <div class="form-group">
+          <label for="schools">Schools (comma-separated):</label>
+          <div id="schoolsTags" class="tag-input"></div>
+          <input
+            type="text"
+            id="schoolsInput"
+            placeholder="Type and press Enter"
+          />
+        </div>
+        <div class="form-group">
+          <label for="photo">Photo URL:</label>
+          <input type="url" id="photo" required />
+        </div>
+        <div class="form-group">
+          <label for="zoomLink">Zoom Link:</label>
+          <input type="url" id="zoomLink" required />
+        </div>
+        <button type="submit" id="submitBtn">Add Teacher</button>
+        <button type="button" id="cancelBtn" class="hidden">Cancel</button>
+      </form>
+    </div>
+
+    <div id="teacherList" class="teacher-list">
+      <!-- Teachers will be listed here -->
+    </div>
+
+    <script>
+      // Initialize teachers from localStorage or use default data
+      let teachers = JSON.parse(localStorage.getItem("teachers")) || [
+        {
+          id: 1,
+          name: "Sarah Johnson",
+          instruments: ["Piano", "Voice"],
+          schools: ["Downtown Music Academy", "Classical Arts School"],
+          photo: "https://via.placeholder.com/300?text=Sarah+J",
+          zoomLink: "https://zoom.us/j/123456789",
+        },
+      ];
+
+      // DOM Elements
+      const form = document.getElementById("teacherForm");
+      const teacherList = document.getElementById("teacherList");
+      const submitBtn = document.getElementById("submitBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const editingId = document.getElementById("editingId");
+      const instrumentsInput = document.getElementById("instrumentsInput");
+      const schoolsInput = document.getElementById("schoolsInput");
+      const instrumentsTags = document.getElementById("instrumentsTags");
+      const schoolsTags = document.getElementById("schoolsTags");
+
+      let currentInstruments = [];
+      let currentSchools = [];
+
+      // Handle tag inputs
+      function setupTagInput(input, tagsContainer, currentTags) {
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const value = input.value.trim();
+            if (value && !currentTags.includes(value)) {
+              currentTags.push(value);
+              renderTags(tagsContainer, currentTags);
+              input.value = "";
+            }
+          }
+        });
+      }
+
+      function renderTags(container, tags) {
+        container.innerHTML = tags
+          .map(
+            (tag) => `
+                <span class="tag">
+                    ${tag}
+                    <button type="button" onclick="removeTag('${tag}', ${
+              container.id === "instrumentsTags"
+                ? "currentInstruments"
+                : "currentSchools"
+            })">×</button>
+                </span>
+            `
+          )
+          .join("");
+      }
+
+      function removeTag(tag, array) {
+        const index = array.indexOf(tag);
+        if (index > -1) {
+          array.splice(index, 1);
+          renderTags(
+            array === currentInstruments ? instrumentsTags : schoolsTags,
+            array
+          );
+        }
+      }
+
+      setupTagInput(instrumentsInput, instrumentsTags, currentInstruments);
+      setupTagInput(schoolsInput, schoolsTags, currentSchools);
+
+      // Save teachers to localStorage
+      function saveTeachers() {
+        localStorage.setItem("teachers", JSON.stringify(teachers));
+        window.parent.postMessage({ type: "teachersUpdated", teachers }, "*");
+      }
+
+      // Render the teacher list
+      function renderTeachers() {
+        teacherList.innerHTML = teachers
+          .map(
+            (teacher) => `
+                <div class="teacher-item">
+                    <div>
+                        <h3>${teacher.name}</h3>
+                        <p>Instruments: ${teacher.instruments.join(", ")}</p>
+                        <p>Schools: ${teacher.schools.join(", ")}</p>
+                    </div>
+                    <div class="teacher-actions">
+                        <button onclick="editTeacher(${
+                          teacher.id
+                        })" class="edit-btn">Edit</button>
+                        <button onclick="deleteTeacher(${
+                          teacher.id
+                        })" class="delete-btn">Delete</button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Add or update teacher
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = {
+          name: document.getElementById("name").value,
+          instruments: currentInstruments,
+          schools: currentSchools,
+          photo: document.getElementById("photo").value,
+          zoomLink: document.getElementById("zoomLink").value,
+        };
+
+        if (editingId.value) {
+          // Update existing teacher
+          const index = teachers.findIndex(
+            (t) => t.id === parseInt(editingId.value)
+          );
+          teachers[index] = { ...teachers[index], ...formData };
+        } else {
+          // Add new teacher
+          formData.id = Date.now();
+          teachers.push(formData);
+        }
+
+        saveTeachers();
+        renderTeachers();
+        form.reset();
+        editingId.value = "";
+        currentInstruments = [];
+        currentSchools = [];
+        renderTags(instrumentsTags, currentInstruments);
+        renderTags(schoolsTags, currentSchools);
+        submitBtn.textContent = "Add Teacher";
+        cancelBtn.classList.add("hidden");
+      });
+
+      // Edit teacher
+      function editTeacher(id) {
+        const teacher = teachers.find((t) => t.id === id);
+        if (teacher) {
+          editingId.value = id;
+          document.getElementById("name").value = teacher.name;
+          document.getElementById("photo").value = teacher.photo;
+          document.getElementById("zoomLink").value = teacher.zoomLink;
+          currentInstruments = [...teacher.instruments];
+          currentSchools = [...teacher.schools];
+          renderTags(instrumentsTags, currentInstruments);
+          renderTags(schoolsTags, currentSchools);
+          submitBtn.textContent = "Update Teacher";
+          cancelBtn.classList.remove("hidden");
+        }
+      }
+
+      // Delete teacher
+      function deleteTeacher(id) {
+        if (confirm("Are you sure you want to delete this teacher?")) {
+          teachers = teachers.filter((t) => t.id !== id);
+          saveTeachers();
+          renderTeachers();
+        }
+      }
+
+      // Cancel editing
+      cancelBtn.addEventListener("click", () => {
+        form.reset();
+        editingId.value = "";
+        currentInstruments = [];
+        currentSchools = [];
+        renderTags(instrumentsTags, currentInstruments);
+        renderTags(schoolsTags, currentSchools);
+        submitBtn.textContent = "Add Teacher";
+        cancelBtn.classList.add("hidden");
+      });
+
+      // Initial render
+      renderTeachers();
+    </script>
+  </body>
+</html>

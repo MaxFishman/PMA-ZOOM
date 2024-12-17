@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Music Lessons</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* All existing styles remain exactly the same */
+      :root {
+        --primary-color: #d2232a;
+        --secondary-color: #1a1a1a;
+        --background-color: #ffffff;
+        --accent-color: #f4f4f4;
+        --font-family: "Montserrat", sans-serif;
+      }
+
+      /* Global Styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background-color: var(--background-color);
+        color: var(--secondary-color);
+        line-height: 1.6;
+      }
+
+      header {
+        position: relative;
+        text-align: center;
+        color: white;
+        background-image: url("https://images.squarespace-cdn.com/content/v1/52502516e4b06da770231d9a/83ead6fc-419a-43ad-99d8-ba21875f2b29/Abby+from+recital.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 100px 15px;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      header p {
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+
+      .controls-wrapper {
+        position: relative;
+        margin: -50px auto 40px;
+        width: 90%;
+        max-width: 800px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        z-index: 2;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 15px;
+      }
+
+      .search-bar {
+        flex: 1;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        background: var(--accent-color);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-bar input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+        background: transparent;
+      }
+
+      .filter {
+        flex: 1;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        background: var(--accent-color);
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .filter img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .filter select {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+        background: transparent;
+        font-family: var(--font-family);
+      }
+
+      .teacher-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .teacher-card {
+        background: var(--accent-color);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
+      }
+
+      .teacher-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .teacher-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+
+      .teacher-card-content {
+        padding: 15px;
+      }
+
+      .teacher-card h3 {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+        margin: 10px 0;
+      }
+
+      .teacher-card p {
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+        margin: 5px 0;
+      }
+
+      .teacher-card a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        color: white;
+        background: var(--primary-color);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+      }
+
+      .teacher-card a:hover {
+        background: #b71c1c;
+      }
+
+      /* Zoom Setup Section */
+      .zoom-setup-section {
+        background: var(--accent-color);
+        padding: 50px 20px;
+        text-align: center;
+      }
+
+      .zoom-setup-section h2 {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        font-weight: 700;
+      }
+
+      .zoom-setup-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .zoom-setup-step {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: left;
+      }
+
+      .zoom-setup-step img {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 15px;
+      }
+
+      .zoom-setup-step h3 {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+      }
+
+      .zoom-setup-step p {
+        font-size: 1rem;
+        color: var(--secondary-color);
+        line-height: 1.5;
+      }
+
+      /* Contact Section */
+      .contact-section {
+        background: var(--background-color);
+        padding: 50px 20px;
+        text-align: center;
+        border-top: 2px solid var(--primary-color);
+      }
+
+      .contact-section h2 {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        font-weight: 700;
+      }
+
+      .contact-info {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .contact-info p {
+        font-size: 1rem;
+        color: var(--secondary-color);
+        margin: 10px 0;
+      }
+
+      .contact-info a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .contact-info a:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive Design for Mobile */
+      @media (max-width: 768px) {
+        .controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-bar,
+        .filter {
+          max-width: 100%;
+          margin-bottom: 10px;
+        }
+
+        .teacher-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+          padding: 15px;
+        }
+
+        header h1 {
+          font-size: 2rem;
+        }
+
+        header p {
+          font-size: 1rem;
+        }
+
+        .controls-wrapper {
+          margin: -30px auto 30px;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Zoom Lessons</h1>
+      <p>Find Your Teacher</p>
+    </header>
+    <div class="controls-wrapper">
+      <div class="controls">
+        <div class="search-bar">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search teachers, instruments, or schools..."
+          />
+        </div>
+        <div class="filter">
+          <img
+            src="https://img.icons8.com/ios/50/000000/guitar.png"
+            alt="Instrument Icon"
+          />
+          <select id="instrumentSelect">
+            <option value="all">All Instruments</option>
+          </select>
+        </div>
+        <div class="filter">
+          <img
+            src="https://img.icons8.com/ios/50/000000/school.png"
+            alt="School Icon"
+          />
+          <select id="schoolSelect">
+            <option value="all">All Schools</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <main>
+      <section class="teacher-grid" id="teacherGrid"></section>
+      <section class="zoom-setup-section">
+        <h2>How to Set Up Zoom for Music Lessons</h2>
+        <div class="zoom-setup-steps">
+          <div class="zoom-setup-step">
+            <img
+              src="https://img.icons8.com/color/96/000000/computer.png"
+              alt="Computer Icon"
+            />
+            <h3>Prepare Your Computer</h3>
+            <p>
+              Ensure your computer is fully charged and has a stable internet
+              connection. Set up in a quiet, distraction-free environment.
+            </p>
+          </div>
+          <div class="zoom-setup-step">
+            <img
+              src="https://img.icons8.com/color/96/000000/microphone.png"
+              alt="Microphone Icon"
+            />
+            <h3>Check Your Microphone</h3>
+            <p>
+              Use a USB microphone or your device's built-in mic. Test your
+              audio in Zoom to ensure clear sound quality.
+            </p>
+          </div>
+          <div class="zoom-setup-step">
+            <img
+              src="https://img.icons8.com/color/96/000000/webcam.png"
+              alt="Webcam Icon"
+            />
+            <h3>Adjust Your Camera</h3>
+            <p>
+              Position your camera so the teacher can see you and your
+              instrument clearly. Make sure you have good lighting.
+            </p>
+          </div>
+          <div class="zoom-setup-step">
+            <img
+              src="https://img.icons8.com/color/96/000000/zoom.png"
+              alt="Zoom Icon"
+            />
+            <h3>Optimize Zoom Settings</h3>
+            <p>
+              Enable "Original Sound" in Zoom to improve audio quality for
+              music. Turn off background noise suppression.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="contact-section">
+        <h2>Contact Us</h2>
+        <div class="contact-info">
+          <p><strong>School Name:</strong> Music Academy</p>
+          <p>
+            <strong>Phone:</strong> <a href="tel:+1234567890">(123) 456-7890</a>
+          </p>
+          <p>
+            <strong>Email:</strong>
+            <a href="mailto:info@musicacademy.com">info@musicacademy.com</a>
+          </p>
+        </div>
+      </section>
+    </main>
+    <script>
+      // Teacher Data - Easy to edit and maintain
+      const teacherData = [
+        {
+          name: "Sarah Johnson",
+          instruments: ["Piano", "Voice"],
+          schools: ["Downtown Music Academy", "Classical Arts School"],
+          photo: "https://via.placeholder.com/300?text=Sarah+J",
+          zoomLink: "https://zoom.us/j/123456789",
+        },
+        {
+          name: "Michael Chen",
+          instruments: ["Violin", "Viola"],
+          schools: ["Classical Arts School", "Youth Symphony Institute"],
+          photo: "https://via.placeholder.com/300?text=Michael+C",
+          zoomLink: "https://zoom.us/j/987654321",
+        },
+        {
+          name: "David Martinez",
+          instruments: ["Guitar", "Bass"],
+          schools: ["Rock Music Institute", "Downtown Music Academy"],
+          photo: "https://via.placeholder.com/300?text=David+M",
+          zoomLink: "https://zoom.us/j/456789123",
+        },
+        {
+          name: "Emma Wilson",
+          instruments: ["Piano", "Music Theory"],
+          schools: ["Downtown Music Academy", "Youth Symphony Institute"],
+          photo: "https://via.placeholder.com/300?text=Emma+W",
+          zoomLink: "https://zoom.us/j/456789124",
+        },
+        {
+          name: "James Taylor",
+          instruments: ["Drums", "Percussion"],
+          schools: ["Rock Music Institute", "Modern Beat Academy"],
+          photo: "https://via.placeholder.com/300?text=James+T",
+          zoomLink: "https://zoom.us/j/456789125",
+        },
+        // Add more teachers here in the same format
+      ];
+
+      // Extract unique instruments and schools for filters
+      const uniqueInstruments = [
+        ...new Set(teacherData.flatMap((t) => t.instruments)),
+      ].sort();
+      const uniqueSchools = [
+        ...new Set(teacherData.flatMap((t) => t.schools)),
+      ].sort();
+
+      // Populate filter dropdowns
+      const instrumentSelect = document.getElementById("instrumentSelect");
+      const schoolSelect = document.getElementById("schoolSelect");
+
+      // Add "All Instruments" option
+      const allInstrumentsOption = document.createElement("option");
+      allInstrumentsOption.value = "all";
+      allInstrumentsOption.textContent = "All Instruments";
+      instrumentSelect.appendChild(allInstrumentsOption);
+
+      // Add instrument options
+      uniqueInstruments.forEach((instrument) => {
+        const option = document.createElement("option");
+        option.value = instrument;
+        option.textContent = instrument;
+        instrumentSelect.appendChild(option);
+      });
+
+      // Add "All Schools" option
+      const allSchoolsOption = document.createElement("option");
+      allSchoolsOption.value = "all";
+      allSchoolsOption.textContent = "All Schools";
+      schoolSelect.appendChild(allSchoolsOption);
+
+      // Add school options
+      uniqueSchools.forEach((school) => {
+        const option = document.createElement("option");
+        option.value = school;
+        option.textContent = school;
+        schoolSelect.appendChild(option);
+      });
+
+      let displayedTeachers = [...teacherData];
+
+      const teacherGrid = document.getElementById("teacherGrid");
+      const searchInput = document.getElementById("searchInput");
+
+      const renderTeachers = () => {
+        teacherGrid.innerHTML = displayedTeachers
+          .map(
+            (t) => `
+              <div class="teacher-card">
+                <img src="${t.photo}" alt="${t.name}">
+                <div class="teacher-card-content">
+                  <h3>${t.name}</h3>
+                  <p><strong>Instruments:</strong> ${t.instruments.join(
+                    ", "
+                  )}</p>
+                  <p><strong>Schools:</strong> ${t.schools.join(", ")}</p>
+                  <a href="${t.zoomLink}" target="_blank">Join Zoom Lesson</a>
+                </div>
+              </div>
+            `
+          )
+          .join("");
+      };
+
+      const filterTeachers = () => {
+        const searchQuery = searchInput.value.toLowerCase();
+        const selectedInstrument = instrumentSelect.value;
+        const selectedSchool = schoolSelect.value;
+
+        displayedTeachers = teacherData.filter(
+          (teacher) =>
+            (selectedInstrument === "all" ||
+              teacher.instruments.includes(selectedInstrument)) &&
+            (selectedSchool === "all" ||
+              teacher.schools.includes(selectedSchool)) &&
+            (teacher.name.toLowerCase().includes(searchQuery) ||
+              teacher.instruments.some((inst) =>
+                inst.toLowerCase().includes(searchQuery)
+              ) ||
+              teacher.schools.some((school) =>
+                school.toLowerCase().includes(searchQuery)
+              ))
+        );
+
+        renderTeachers();
+      };
+
+      searchInput.addEventListener("input", filterTeachers);
+      instrumentSelect.addEventListener("change", filterTeachers);
+      schoolSelect.addEventListener("change", filterTeachers);
+
+      // Initial render
+      renderTeachers();
+
+      // Listen for updates from admin panel
+      window.addEventListener("message", function (event) {
+        if (event.data.type === "teachersUpdated") {
+          teacherData = event.data.teachers;
+          // Update filters and re-render
+          uniqueInstruments = [
+            ...new Set(teacherData.flatMap((t) => t.instruments)),
+          ].sort();
+          uniqueSchools = [
+            ...new Set(teacherData.flatMap((t) => t.schools)),
+          ].sort();
+          // Re-populate filters
+          populateFilters();
+          // Re-render teachers
+          filterTeachers();
+        }
+      });
+    </script>
+  </body>
+</html>
